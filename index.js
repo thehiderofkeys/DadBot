@@ -42,7 +42,7 @@ getCredentials(runChatAPI)
 
 function parseMessage(api, message){
     console.log(message.body)
-    const names = message.body.match(/(?<=(?:im|i'm|i’m|i am)\s)[^.]*/gi)
+    const names = message.body.match(/(?<=\b(?:im|i'm|i’m|i am)\s)[^,.]*/gi)
     if(names && names.length > 0){
         const reply = `Hi ${names[0]}, I'm Dad!`
         api.sendMessage(reply, message.threadID);
