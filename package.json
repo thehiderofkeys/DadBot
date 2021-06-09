@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "facebook-chat-api": "^1.8.0",
     "puppeteer": "^10.0.0"
   }
 }

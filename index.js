@@ -1,3 +1,4 @@
+const login = require("facebook-chat-api");
 const fs = require("fs")
 const puppeteer = require('puppeteer');
 
@@ -23,5 +24,28 @@ async function getCredentials(callback){
     callback()
 }
 
+function runChatAPI(){
+    var appStateString = fs.readFileSync("appstate.json","utf-8");
+    const credentials = { appState: JSON.parse(appStateString.replace(/name/g,"key"))}
+    login(credentials, (err, api) => {
+        if(err) return console.error(err);
+    
+        api.listenMqtt ((err, message) => {
+            if(message.body){
+                parseMessage(api,message)
+            }
+        });
+    });
+}
 
-getCredentials(()=>{console.log("Credentials Retrieved!")})
+getCredentials(runChatAPI)
+
+function parseMessage(api, message){
+    console.log(message.body)
+    const names = message.body.match(/(?<=(?:im|i'm|i’m|i am)\s)[^.]*/gi)
+    if(names && names.length > 0){
+        const reply = `Hi ${names[0]}, I'm Dad!`
+        api.sendMessage(reply, message.threadID);
+    }
+
+}
